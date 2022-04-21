@@ -1,0 +1,14 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        jcenter() // Warning: this repository is going to shut down soon
+        maven {
+//            url "https://sdk-android-dev.console.fktr.io/" // Dev gradle
+            url "https://sdk-android-prod.launch.liveramp.com"
+        }
+    }
+}
+rootProject.name = "Liveramp ATS Sample App"
+include ':app'

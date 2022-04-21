@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Liveramp ATS Simple Demo</string>
+    <string name="lr_ats_sdk_version">LR ATS SDK Version:</string>
+    <string name="initialize_liveRamp_ats_sdk">Initialize LiveRamp ATS SDK</string>
+    <string name="fetch_rampID_envelope">Fetch RampID Envelope</string>
+    <string name="reset_lr_ats_sdk">Reset LR ATS SDK</string>
+    <string name="not_initialized">Not Initialized</string>
+    <string name="clear_all_fields">Clear All Fields</string>
+    <string name="v0_0_0">v0.0.0</string>
+    <string name="sdk_initialized">SDK Initialized:</string>
+    <string name="exampleEmail">test@liveramp.com</string>
+    <string name="email">Email:</string>
+    <string name="envelope">Envelope:</string>
+    <string name="placeholder">PLACEHOLDER</string>
+    <string name="err_string">Sample Error</string>
+</resources>

@@ -1,0 +1,19 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+
+        // LiveRamp SDK Maven repository
+        maven {
+            url "https://sdk-android-prod.launch.liveramp.com"
+        }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:7.0.4"
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
