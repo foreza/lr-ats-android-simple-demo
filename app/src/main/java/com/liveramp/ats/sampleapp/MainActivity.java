@@ -6,14 +6,12 @@ import androidx.preference.PreferenceManager;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.liveramp.ats.LRAtsManager;
 import com.liveramp.ats.LRError;
 import com.liveramp.ats.callbacks.LRCompletionHandlerCallback;
@@ -22,11 +20,6 @@ import com.liveramp.ats.model.Configuration;
 import com.liveramp.ats.model.Envelope;
 import com.liveramp.ats.model.LRAtsConfiguration;
 import com.liveramp.ats.model.LREmailIdentifier;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -62,14 +55,15 @@ public class MainActivity extends AppCompatActivity {
     // Example on how to init LiveRamp
     private void initializeLiveRampATS(){
 
+
         if (notCheckingForCCPA || supportOtherGeos) {
             LRAtsManager.INSTANCE.hasConsentForNoLegislation();
         }
 
-        // Notice: This will be removed in a subsequent SDK release
-        Configuration fallbackConfig = generateFallBackConfigurationForFileName("fallback_configuration.json");
-
-        LRAtsConfiguration config = new LRAtsConfiguration(appID, fallbackConfig);
+        // For the 2nd param (boolean), set "true" to enable test mode
+        // In test mode - the SDK will "simulate" envelopes.s
+        // Note: No network calls will actually be made!
+        LRAtsConfiguration config = new LRAtsConfiguration(appID, true);
 
         LRAtsManager.INSTANCE.initialize(config, new LRCompletionHandlerCallback() {
             @Override
@@ -86,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     // Example of Envelope fetch with email
     private void retrieveEnvelopeForInput(String email) {
@@ -125,31 +120,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // Temporary utility method to construct a fallback config - will be removed in the future
-    private Configuration generateFallBackConfigurationForFileName(String fileName) {
-
-        StringBuilder sb = new StringBuilder();
-        try (InputStream is = getAssets().open("fallback_configuration.json");
-             BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-        } catch (Exception e) {
-            // TODO: Handle the exception.
-        }
-
-        String pubConfigurationJson = sb.toString();
-        Gson gson = new Gson();
-        Configuration fallbackConfiguration = gson.fromJson(pubConfigurationJson, Configuration.class);
-        return fallbackConfiguration;
-    }
-
-
     private void updateSDKVersionDisplay(){
-        // Placeholder: this API will be available in a future release
-        // LRAtsManager.INSTANCE.getSDKVersion();
-        sdkVersionRef.setText("v1.0.3");
+        sdkVersionRef.setText(LRAtsManager.INSTANCE.getSdkVersion());
     }
 
 
@@ -175,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Behavior for init SDK
         btn_initSDK.setOnClickListener(v -> {
-            setPlaceholderConsentExample();         // Ensure your consent values are set prior to initialization.
+            // setPlaceholderConsentExample();         // Ensure your consent values are set prior to initialization.
             initializeLiveRampATS();                // Initialize the SDK as early as possible after consent values have been stored.
         });
 
@@ -190,8 +162,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Behavior to reset SDK
         btn_resetSDK.setOnClickListener(v -> {
-            // Not supported today - as a temp workaround, clear your app storage
-            // LRAtsManager.INSTANCE.resetSDK()
+             LRAtsManager.INSTANCE.resetSdk();
+            updateSDKInitStatus();
         });
 
         // Behavior to clear all input
