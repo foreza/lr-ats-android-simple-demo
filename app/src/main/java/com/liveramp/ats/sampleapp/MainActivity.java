@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (notCheckingForCCPA || supportOtherGeos) {
-            LRAtsManager.INSTANCE.hasConsentForNoLegislation();
+            LRAtsManager.INSTANCE.setHasConsentForNoLegislation(true);
         }
 
         // For the 2nd param (boolean), set "true" to enable test mode
