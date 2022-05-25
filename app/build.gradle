@@ -31,9 +31,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
 
-
-    implementation 'com.google.code.gson:gson:2.8.9'    // (Deprecation next version): For reading out the fallback configuration.
-    implementation("com.liveramp:ats:v1.0.3") {         // Required: The LiveRamp ATS SDK
+    implementation("com.liveramp:ats:v1.1.0") {         // Required: The LiveRamp ATS SDK
         transitive(true)
     }
 }
