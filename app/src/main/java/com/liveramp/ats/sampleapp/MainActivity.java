@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         // For the 2nd param (boolean), set "true" to enable test mode
         // In test mode - the SDK will "simulate" envelopes.s
         // Note: No network calls will actually be made!
-        LRAtsConfiguration config = new LRAtsConfiguration(appID, true);
+        LRAtsConfiguration config = new LRAtsConfiguration(appID, false);
 
         LRAtsManager.INSTANCE.initialize(config, new LRCompletionHandlerCallback() {
             @Override
