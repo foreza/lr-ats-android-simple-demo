@@ -25,7 +25,7 @@ import com.liveramp.ats.model.LREmailIdentifier;
 public class MainActivity extends AppCompatActivity {
 
     String LOGTAG = "LiveRamp ATS Sample";
-    String appID = "2b03d6f7-6d78-4ae6-955e-56ca0a4f1fca"; // Sample App ID only; create your own!
+    String appID = "e47b5b24-f041-4b9f-9467-4744df409e31"; // Sample App ID only; create your own!
     String env;
 
     Boolean notCheckingForCCPA = true;
