@@ -25,7 +25,7 @@ import com.liveramp.ats.model.LREmailIdentifier;
 public class MainActivity extends AppCompatActivity {
 
     String LOGTAG = "LiveRamp ATS Sample";
-    String appID = "a1b1ac46-ded4-436f-9e6d-5a0626f2dcc0";
+    String appID = "2b03d6f7-6d78-4ae6-955e-56ca0a4f1fca"; // Sample App ID only; create your own!
     String env;
 
     Boolean notCheckingForCCPA = true;
@@ -61,9 +61,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // For the 2nd param (boolean), set "true" to enable test mode
-        // In test mode - the SDK will "simulate" envelopes.s
+        // In test mode - the SDK will "simulate" envelopes.
         // Note: No network calls will actually be made!
-        LRAtsConfiguration config = new LRAtsConfiguration(appID, false);
+        // Ensure you set this to true before testing in an acceptance/staging environment
+        LRAtsConfiguration config = new LRAtsConfiguration(appID, false, false);
 
         LRAtsManager.INSTANCE.initialize(config, new LRCompletionHandlerCallback() {
             @Override
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     clearErrorMessage();
                 } else {
                     // TODO: SDK failed to initialize - handle this error.
-                    Log.e(LOGTAG, "SDk failed to initialize.");
+                    Log.e(LOGTAG, "SDK failed to initialize.");
                     logErrorMessage(lrError.getMessage());
                 }
             }
