@@ -1,10 +1,14 @@
 package com.liveramp.ats.sampleapp;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,14 +16,32 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.common.base.Charsets;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import com.liveramp.ats.LRAtsManager;
 import com.liveramp.ats.LRError;
 import com.liveramp.ats.callbacks.LRCompletionHandlerCallback;
 import com.liveramp.ats.callbacks.LREnvelopeCallback;
-import com.liveramp.ats.model.Configuration;
 import com.liveramp.ats.model.Envelope;
 import com.liveramp.ats.model.LRAtsConfiguration;
 import com.liveramp.ats.model.LREmailIdentifier;
+
+import java.io.UnsupportedEncodingException;
+import java.security.DigestException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -144,6 +166,8 @@ public class MainActivity extends AppCompatActivity {
         Button btn_fetchEnvelope = (Button) findViewById(R.id.btn_fetchEnvelope);
         Button btn_resetSDK = (Button) findViewById(R.id.btn_resetSDK);
         Button btn_clearAll = (Button) findViewById(R.id.btn_clearAll);
+        Button btn_doATSAPICallDirect = (Button) findViewById(R.id.btn_fetchEnvelopeViaAPI);
+
 
 
         // Behavior for init SDK
@@ -172,6 +196,12 @@ public class MainActivity extends AppCompatActivity {
             emailInputValue.setText("");
             envelopeDisplayRef.setText("");
             clearErrorMessage();
+        });
+
+
+        btn_doATSAPICallDirect.setOnClickListener(v -> {
+            // DO API call
+            retrieveEnvelopeViaAPIForInput("test@liveramp.com", "13669");
         });
 
     }
@@ -216,5 +246,58 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private Map<String, String> getHashedEmails(String rawEmail) {
+        Map hashedEmailsMap = new HashMap<String, String>();
+
+        // Hash some stuff (terribly)
+        final HashCode hc_sha256 = Hashing.sha256().newHasher()
+                .putString(rawEmail, Charsets.UTF_8).hash();
+
+        final HashCode hc_sha1 = Hashing.sha1().newHasher()
+                .putString(rawEmail, Charsets.UTF_8).hash();
+
+        final HashCode hc_md5 = Hashing.md5().newHasher()
+                .putString(rawEmail, Charsets.UTF_8).hash();
+
+        // Store the hashes
+        hashedEmailsMap.put("SHA256", hc_sha256.toString());
+        hashedEmailsMap.put("SHA1", hc_sha1.toString());
+        hashedEmailsMap.put("MD5", hc_md5.toString());
+
+        return hashedEmailsMap;
+    }
+
+    // As an example - if you'd prefer to call ATS directly yourself, here's an example:
+    // This will probably leak. ;)
+    private void retrieveEnvelopeViaAPIForInput(String email, String pid) {
+
+        Map emailMap = getHashedEmails(email);
+
+        // TODO: hash the stuff ourselves and use PID as param
+        String API_BASE_URL = "https://api.rlcdn.com/api/identity/envelope?pid=" + pid +
+                "&it=4&iv=" + emailMap.get("SHA256") +
+                "&it=4&iv=" + emailMap.get("SHA1") +
+                "&it=4&iv=" + emailMap.get("MD5");
+
+        String APP_BUNDLE_ID = this.getPackageName();
+
+        RequestQueue q = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Request.Method.GET, API_BASE_URL, response ->
+                envelopeDisplayRef.setText(response),
+                error -> logErrorMessage(error.getMessage()))
+        {
+            @Override
+            // The LiveRamp API requires at minimum the origin header.
+            // You'll need to work with your account manager to whitelist your app.
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Origin", APP_BUNDLE_ID);
+                return params;
+            }
+        };
+
+        q.add(request);
+    }
 
 }

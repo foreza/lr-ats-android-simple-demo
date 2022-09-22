@@ -31,7 +31,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
 
+    implementation 'com.android.volley:volley:1.2.1' // For ease of calling the ATS APi directly
     implementation("com.liveramp:ats:v1.3.0") {         // Required: The LiveRamp ATS SDK
         transitive(true)
     }
+
+    implementation(group: 'com.google.guava', name: 'guava', version: '29.0-jre')
+
 }
