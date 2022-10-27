@@ -3,11 +3,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-
-        // LiveRamp SDK Maven repository
-        maven {
-            url "https://sdk-android-prod.launch.liveramp.com"
-        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.2'
