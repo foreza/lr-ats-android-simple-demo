@@ -31,6 +31,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
 
+
+//    Admob
+    implementation 'com.google.android.gms:play-services-ads:21.3.0'
+
+
     implementation("com.liveramp:ats:v1.4.1") {         // Required: The LiveRamp ATS SDK
         transitive(true)
     }

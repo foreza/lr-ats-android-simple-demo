@@ -12,6 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.AdapterStatus;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.liveramp.ats.LRAtsManager;
 import com.liveramp.ats.LRError;
 import com.liveramp.ats.callbacks.LRCompletionHandlerCallback;
@@ -20,6 +27,8 @@ import com.liveramp.ats.model.Configuration;
 import com.liveramp.ats.model.Envelope;
 import com.liveramp.ats.model.LRAtsConfiguration;
 import com.liveramp.ats.model.LREmailIdentifier;
+
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     TextView errMessageRef;
     EditText emailInputValue;
 
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +59,37 @@ public class MainActivity extends AppCompatActivity {
 
         // Best practice: initialize the SDK before an authentication event has occurred.
         // initializeLiveRampATS();
+        initAdMob();
+    }
+
+
+    private void initAdMob() {
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+
+                Map<String, AdapterStatus> statusMap = initializationStatus.getAdapterStatusMap();
+                for (String adapterClass : statusMap.keySet()) {
+                    AdapterStatus status = statusMap.get(adapterClass);
+                    Log.d("MyApp", String.format(
+                            "Adapter name: %s, Description: %s, Latency: %d",
+                            adapterClass, status.getDescription(), status.getLatency()));
+                }
+
+                // Get liveramp signal?
+
+                doAdmobRequest();
+            }
+        });
+
+    }
+
+
+    private void doAdmobRequest() {
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
 

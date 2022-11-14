@@ -14,6 +14,10 @@
         android:supportsRtl="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/Theme.AppCompat.DayNight">
+<!--        Sample ATS  ca-app-pub-4751455842312446~2911650200-->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-4751455842312446~2911650200"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
