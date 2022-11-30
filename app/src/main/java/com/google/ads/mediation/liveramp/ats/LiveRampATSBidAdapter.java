@@ -33,14 +33,60 @@ public class LiveRampATSBidAdapter extends RtbAdapter {
     // Example: https://github.com/googleads/googleads-mobile-android-mediation/blob/master/ThirdPartyAdapters/pangle/pangle/src/main/java/com/google/ads/mediation/pangle/PangleMediationAdapter.java#L53
     public static final String LOGTAG = LiveRampATSBidAdapter.class.getSimpleName();
 
+    // TODO: Handle CCPA/GDPR within adapter, or delegate fully to our own SDK?
+
+    // Let the adapter persist the identifier?
+    protected static LRIdentifierData identifierData;
+
+    public static void setLREmailIdentifier(String emailIdentifier) {
+
+        // TODO: Any additional validation?
+        if (emailIdentifier == null ||  emailIdentifier.length() <= 0){
+            Log.e(LOGTAG, "(FAILED) setLREmailIdentifier: " + emailIdentifier);
+            return;
+        }
+
+        Log.i(LOGTAG, "setLREmailIdentifier: " + emailIdentifier);
+        identifierData = new LREmailIdentifier(emailIdentifier);
+    }
+
+
+    // Note: Should likely only be used in the US; heavily prefer email.
+    public static void setLRPhoneIdentifier(String phoneIdentifier) {
+
+        if (phoneIdentifier == null ||  phoneIdentifier.length() > 0){
+            Log.e(LOGTAG, "(FAILED) setLRPhoneIdentifier: " + phoneIdentifier);
+            return;
+        }
+
+        Log.i(LOGTAG, "setLRPhoneIdentifier: " + phoneIdentifier);
+        identifierData = new LRPhoneIdentifier(phoneIdentifier);
+    }
+
+
+    // Do we even need this?
+    public static void clearLRIdentifier(){
+        identifierData = null;
+    }
+
     // TODO: We need to implement this so that when Google calls our adapter, we will respond either with an envelope or empty string
-    // We might need a new method that can fetch an envelope without providing an identifier
+    // We might need a new method that can fetch an envelope without providing an identifier, like this POC's approach.
     // Similar to ATS.js - ats.retrieveEnvelope();
     // That way - collectSignals can simply call retrieveEnvelope().
     @Override
     public void collectSignals(@NonNull RtbSignalData rtbSignalData, @NonNull SignalCallbacks signalCallbacks) {
 
-        LRAtsManager.INSTANCE.getEnvelope(new LREmailIdentifier("jason.chiu@liveramp.com"), new LREnvelopeCallback() {
+        // Suggestion: send an empty signal if we don't have any identifier data
+        // this will at least allow us to troubleshoot more efficiently within the a3p param
+        if (identifierData == null) {
+            Log.e(LOGTAG, "LiveRamp ATS Identifier data not set; using empty signal. To fix, set an identifier. Example: LiveRampATSBidAdapter.setLREmailIdentifier(\"your@email.com\")");
+            signalCallbacks.onSuccess("");
+            return;
+        }
+
+        // For POC: We _could_ persist the identifier data as a static member and grab it
+        // Hopefully it doesn't leak..
+        LRAtsManager.INSTANCE.getEnvelope(identifierData, new LREnvelopeCallback() {
             @Override
             public void invoke(@Nullable Envelope envelope, @Nullable LRError lrError) {
 
@@ -56,7 +102,9 @@ public class LiveRampATSBidAdapter extends RtbAdapter {
                     }
 
                 } catch (Exception e) {
-                    Log.e(LOGTAG, "An error occurred with envelope fetch:" + e.getLocalizedMessage());
+                    Log.e(LOGTAG, "An error occurred with envelope fetch: " + e.getLocalizedMessage());
+                    // TODO: What error codes can we use? Are these arbitrary?
+                    signalCallbacks.onFailure(new AdError(101, "Error with signal collection for LR", "LiveRamp"));
                 }
             }
         });

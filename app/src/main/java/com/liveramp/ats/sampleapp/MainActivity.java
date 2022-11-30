@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.ads.mediation.liveramp.ats.LiveRampATSBidAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -76,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
                             "Adapter name: %s, Description: %s, Latency: %d",
                             adapterClass, status.getDescription(), status.getLatency()));
                 }
+
+                // Set the email for upcoming bid requests
+                // LiveRampATSBidAdapter.setLREmailIdentifier("jason.chiu@liveramp.com");
 
             }
         });
@@ -188,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
         // POC: Make google ad request
         btn_getGoogleAd.setOnClickListener(v -> {
             // Call for an ad after the AdMob/GMA SDK is initialized
+            LiveRampATSBidAdapter.setLREmailIdentifier(emailInputValue.getText().toString());
             doAdmobRequest();
         });
 
