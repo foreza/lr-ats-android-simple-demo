@@ -77,9 +77,6 @@ public class MainActivity extends AppCompatActivity {
                             adapterClass, status.getDescription(), status.getLatency()));
                 }
 
-                // Get liveramp signal?
-
-                doAdmobRequest();
             }
         });
 
@@ -185,6 +182,14 @@ public class MainActivity extends AppCompatActivity {
         Button btn_fetchEnvelope = (Button) findViewById(R.id.btn_fetchEnvelope);
         Button btn_resetSDK = (Button) findViewById(R.id.btn_resetSDK);
         Button btn_clearAll = (Button) findViewById(R.id.btn_clearAll);
+
+        Button btn_getGoogleAd = (Button) findViewById(R.id.btn_requestGoogleAd);
+
+        // POC: Make google ad request
+        btn_getGoogleAd.setOnClickListener(v -> {
+            // Call for an ad after the AdMob/GMA SDK is initialized
+            doAdmobRequest();
+        });
 
 
         // Behavior for init SDK

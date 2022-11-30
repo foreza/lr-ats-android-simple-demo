@@ -78,6 +78,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_resetSDK" />
 
+    <Button
+        android:id="@+id/btn_requestGoogleAd"
+        android:layout_width="0dp"
+        android:textSize="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/onFire"
+        android:text="@string/request_admob_ad"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_clearAll" />
+
     <TextView
         android:id="@+id/tv_versionValue"
         android:layout_width="wrap_content"
@@ -181,6 +197,6 @@
         app:adUnitId="ca-app-pub-4751455842312446/2505596103"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_clearAll"></com.google.android.gms.ads.AdView>
+        app:layout_constraintTop_toBottomOf="@+id/btn_requestGoogleAd"></com.google.android.gms.ads.AdView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

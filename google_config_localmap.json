@@ -1,0 +1,50 @@
+{
+  "status": 1,
+  "app_id": "ca-app-pub-4751455842312446~2911650200",
+  "auto_collect_location": true,
+  "ad_unit_settings": [{
+    "ad_unit_id": "ca-app-pub-4751455842312446/2505596103",
+    "format": "banner",
+    "mediation_config": {
+      "ad_networks": [{
+        "data": {
+          "appid": "123456",
+          "placementid": "123456"
+        },
+        "rtb_adapters": ["com.google.ads.mediation.pangle.PangleMediationAdapter", "com.google.ads.mediation.liveramp.ats.LiveRampATSBidAdapter"]
+      }, {
+        "adapters": ["com.google.ads.mediation.customevent.CustomEventAdapter"]
+      }, {
+        "adapters": ["com.google.ads.mediation.admob.AdMobAdapter"]
+      }]
+    },
+    "is_mediation": true
+  }],
+  "initializer_settings": {
+    "config": {
+      "com.google.ads.mediation.liveramp.ats.LiveRampATSBidAdapter": {
+        "data": [{
+          "format": "banner",
+          "data": {
+            "class_name": "com.google.ads.mediation.liveramp.ats.LiveRampATSBidAdapter",
+            "label": "LiveRamp Test",
+            "appID": "e47b5b24-f041-4b9f-9467-4744df409e31"
+          }
+        }]
+      },
+      "com.google.ads.mediation.pangle.PangleMediationAdapter": {
+        "data": [{
+          "format": "banner",
+          "data": {
+            "appid": "123456",
+            "placementid": "123456"
+          }
+        }]
+      }
+    }
+  },
+  "exp_param": {
+    "loeid": [44766145]
+  },
+  "admob_esp_processor_term_accepted": true
+}

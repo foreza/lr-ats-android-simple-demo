@@ -13,4 +13,5 @@
     <string name="envelope">Envelope:</string>
     <string name="placeholder">PLACEHOLDER</string>
     <string name="err_string">Sample Error</string>
+    <string name="request_admob_ad">Request AdMob Ad</string>
 </resources>

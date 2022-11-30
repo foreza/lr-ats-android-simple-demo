@@ -8,6 +8,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.mediation.InitializationCompleteCallback;
 import com.google.android.gms.ads.mediation.MediationConfiguration;
 import com.google.android.gms.ads.mediation.VersionInfo;
@@ -20,12 +21,22 @@ import com.liveramp.ats.model.*;
 
 import java.util.List;
 
+// TODO: Figure out the class name we will tell google
+// From this point on, we cannot change it (not easily)
 public class LiveRampATSBidAdapter extends RtbAdapter {
+
+    // For testing, make sure (until Google supports this in their backend)
+    // To localmap the config json file to
+    // https://googleads.g.doubleclick.net/getconfig/pubsetting?
 
     // https://developers.google.com/admob/android/custom-events/setup#initialize_the_adapter
     // Example: https://github.com/googleads/googleads-mobile-android-mediation/blob/master/ThirdPartyAdapters/pangle/pangle/src/main/java/com/google/ads/mediation/pangle/PangleMediationAdapter.java#L53
     public static final String LOGTAG = LiveRampATSBidAdapter.class.getSimpleName();
 
+    // TODO: We need to implement this so that when Google calls our adapter, we will respond either with an envelope or empty string
+    // We might need a new method that can fetch an envelope without providing an identifier
+    // Similar to ATS.js - ats.retrieveEnvelope();
+    // That way - collectSignals can simply call retrieveEnvelope().
     @Override
     public void collectSignals(@NonNull RtbSignalData rtbSignalData, @NonNull SignalCallbacks signalCallbacks) {
 
@@ -65,6 +76,8 @@ public class LiveRampATSBidAdapter extends RtbAdapter {
         return new VersionInfo(1, 0, 0);
     }
 
+    // TODO: Are there any other parameters we need to expose to google?
+    // Google would ideally provide us all the params we need to init the SDK and can also initialize on our behalf
     @Override
     public void initialize(@NonNull Context context, @NonNull InitializationCompleteCallback initializationCompleteCallback, @NonNull List<MediationConfiguration> list) {
 
@@ -72,12 +85,12 @@ public class LiveRampATSBidAdapter extends RtbAdapter {
 
         for (MediationConfiguration config : list) {
             Bundle serverParameters = config.getServerParameters();
-            appID = serverParameters.getString("appID");
+            appID = serverParameters.getString("appID", "e47b5b24-f041-4b9f-9467-4744df409e31");
         }
 
         Log.d(LOGTAG, "Initializing with PID..." + appID);
 
-        if (appID.length() == 0) {
+        if (appID == null || appID.length() == 0) {
             Log.e(LOGTAG, "SDK failed to initialize: LiveRamp App ID not provided" );
             initializationCompleteCallback.onInitializationFailed("LiveRamp App ID not provided; SDK not initialized"); // TODO: make constants, stop duplication
             return;
