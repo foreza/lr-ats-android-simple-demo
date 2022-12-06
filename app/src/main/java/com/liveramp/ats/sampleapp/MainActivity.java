@@ -12,9 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.ads.mediation.liveramp.ats.LiveRampATSBidAdapter;
+import com.liveramp.ats.LRAtsMediationAdapter;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.AdapterStatus;
@@ -24,7 +23,6 @@ import com.liveramp.ats.LRAtsManager;
 import com.liveramp.ats.LRError;
 import com.liveramp.ats.callbacks.LRCompletionHandlerCallback;
 import com.liveramp.ats.callbacks.LREnvelopeCallback;
-import com.liveramp.ats.model.Configuration;
 import com.liveramp.ats.model.Envelope;
 import com.liveramp.ats.model.LRAtsConfiguration;
 import com.liveramp.ats.model.LREmailIdentifier;
@@ -58,9 +56,12 @@ public class MainActivity extends AppCompatActivity {
         updateSDKVersionDisplay();
         updateSDKInitStatus();
 
-        // Best practice: initialize the SDK before an authentication event has occurred.
-        // initializeLiveRampATS();
+        // If possible, set the LiveRamp SDK parameters before.
+        //
+        LRAtsMediationAdapter.setLRATSInitParams(appID, true, false);
+
         initAdMob();
+        // Phone/Email can be set at a later time if not yet set.
     }
 
 
@@ -192,8 +193,10 @@ public class MainActivity extends AppCompatActivity {
         // POC: Make google ad request
         btn_getGoogleAd.setOnClickListener(v -> {
             // Call for an ad after the AdMob/GMA SDK is initialized
-            LiveRampATSBidAdapter.setLREmailIdentifier(emailInputValue.getText().toString());
             doAdmobRequest();
+
+            // As an example - set the LR identifier later.
+            LRAtsMediationAdapter.setLREmailIdentifier(emailInputValue.getText().toString());
         });
 
 
