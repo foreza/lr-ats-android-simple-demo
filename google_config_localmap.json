@@ -11,7 +11,7 @@
           "appid": "123456",
           "placementid": "123456"
         },
-        "rtb_adapters": ["com.google.ads.mediation.pangle.PangleMediationAdapter", "com.google.ads.mediation.liveramp.ats.LiveRampATSBidAdapter"]
+        "rtb_adapters": ["com.google.ads.mediation.pangle.PangleMediationAdapter", "com.liveramp.ats.LRAtsMediationAdapter"]
       }, {
         "adapters": ["com.google.ads.mediation.customevent.CustomEventAdapter"]
       }, {
@@ -22,11 +22,11 @@
   }],
   "initializer_settings": {
     "config": {
-      "com.google.ads.mediation.liveramp.ats.LiveRampATSBidAdapter": {
+      "com.liveramp.ats.LRAtsMediationAdapter": {
         "data": [{
           "format": "banner",
           "data": {
-            "class_name": "com.google.ads.mediation.liveramp.ats.LiveRampATSBidAdapter",
+            "class_name": "com.liveramp.ats.LRAtsMediationAdapter",
             "label": "LiveRamp Test",
             "appID": "e47b5b24-f041-4b9f-9467-4744df409e31"
           }
