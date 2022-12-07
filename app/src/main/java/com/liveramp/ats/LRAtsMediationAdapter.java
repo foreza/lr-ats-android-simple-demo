@@ -164,7 +164,7 @@ public class LRAtsMediationAdapter extends RtbAdapter {
 
         // Set the version string.
         try {
-            String [] versionString = LRAtsManager.INSTANCE.getSdkVersion().split(".");
+            String [] versionString = LRAtsManager.INSTANCE.getSdkVersion().split("\\.");
             versionInfo = new VersionInfo(Integer.parseInt(versionString[0]),
                     Integer.parseInt(versionString[1]),
                     Integer.parseInt(versionString[2]));

@@ -80,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 // Set the email for upcoming bid requests
-                // LiveRampATSBidAdapter.setLREmailIdentifier("jason.chiu@liveramp.com");
-
+                 LRAtsMediationAdapter.setLREmailIdentifier("jason.chiu@liveramp.com");
             }
         });
 
