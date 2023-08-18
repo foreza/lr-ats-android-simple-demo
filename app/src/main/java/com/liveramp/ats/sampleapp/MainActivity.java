@@ -25,7 +25,13 @@ import com.liveramp.ats.model.LREmailIdentifier;
 public class MainActivity extends AppCompatActivity {
 
     String LOGTAG = "LiveRamp ATS Sample";
+//    String appID = "79216a03-802c-4dc5-aff2-0cb3a9637df6"; // Sample App ID only; create your own!
+//    String appID = "1c3b9a32-3e75-4deb-be6a-d26b38ecd6d1";
+//    String appID = "b5316362-2b10-48e2-8cb8-c61fbd439632"; // iqiyi android
+
     String appID = "e47b5b24-f041-4b9f-9467-4744df409e31"; // Sample App ID only; create your own!
+
+
     String env;
 
     Boolean notCheckingForCCPA = true;
@@ -60,11 +66,10 @@ public class MainActivity extends AppCompatActivity {
             LRAtsManager.INSTANCE.setHasConsentForNoLegislation(true);
         }
 
-        // For the 2nd param (boolean), set "true" to enable test mode
+        // For the 2nd boolean param, set to "false" for production.
         // In test mode - the SDK will "simulate" envelopes.
-        // Note: No network calls will actually be made!
-        // Ensure you set this to true before testing in an acceptance/staging environment
-        LRAtsConfiguration config = new LRAtsConfiguration(appID, false, false);
+        // Note: No network calls will actually be made in test mode
+        LRAtsConfiguration config = new LRAtsConfiguration(appID, false, false, null);
 
         LRAtsManager.INSTANCE.initialize(config, new LRCompletionHandlerCallback() {
             @Override
@@ -85,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Example of Envelope fetch with email
     private void retrieveEnvelopeForInput(String email) {
-
+//        LRAtsManager.INSTANCE.getEnvelope();
         LRAtsManager.INSTANCE.getEnvelope(new LREmailIdentifier(email), new LREnvelopeCallback() {
             @Override
             public void invoke(@Nullable Envelope envelope, @Nullable LRError lrError) {
@@ -148,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Behavior for init SDK
         btn_initSDK.setOnClickListener(v -> {
-            // setPlaceholderConsentExample();         // Ensure your consent values are set prior to initialization.
+            setPlaceholderConsentExample();         // Ensure your consent values are set prior to initialization.
             initializeLiveRampATS();                // Initialize the SDK as early as possible after consent values have been stored.
         });
 
