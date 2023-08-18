@@ -7,16 +7,6 @@ dependencyResolutionManagement {
         maven {
             url "https://sdk-android-prod.launch.liveramp.com"
         }
-        maven {
-            url = uri("https://adsbynimbus-public.s3.amazonaws.com/android/sdks")
-            credentials {
-                username = "*"
-            }
-            content {
-                includeGroupByRegex(".*\\.adsbynimbus.*")
-            }
-        }
-
 
     }
 }
