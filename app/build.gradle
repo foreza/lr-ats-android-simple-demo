@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.liveramp.ats.sampleapp"
         minSdk 21
-        targetSdk 31
+        targetSdk 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -31,7 +31,12 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
 
-    implementation("com.liveramp:ats:v1.4.1") {         // Required: The LiveRamp ATS SDK
+    // Required: The LiveRamp ATS SDK
+    // If you wish to lock to a specific version - check for the versions at
+    // https://developers.liveramp.com/authenticatedtraffic-api/changelog
+    implementation("com.liveramp:ats:v2.+") {
         transitive(true)
     }
+
+
 }
