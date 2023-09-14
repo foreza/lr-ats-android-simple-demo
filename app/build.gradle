@@ -34,7 +34,7 @@ dependencies {
     // Required: The LiveRamp ATS SDK
     // If you wish to lock to a specific version - check for the versions at
     // https://developers.liveramp.com/authenticatedtraffic-api/changelog
-    implementation("com.liveramp:ats:v2.+") {
+    implementation("com.liveramp:ats:v2.2.0") {
         transitive(true)
     }
 
