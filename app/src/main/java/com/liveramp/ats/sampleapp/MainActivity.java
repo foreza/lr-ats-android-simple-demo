@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +17,6 @@ import com.liveramp.ats.LRAtsManager;
 import com.liveramp.ats.LRError;
 import com.liveramp.ats.callbacks.LRCompletionHandlerCallback;
 import com.liveramp.ats.callbacks.LREnvelopeCallback;
-import com.liveramp.ats.model.Configuration;
 import com.liveramp.ats.model.Envelope;
 import com.liveramp.ats.model.LRAtsConfiguration;
 import com.liveramp.ats.model.LREmailIdentifier;
@@ -26,7 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
     String LOGTAG = "LiveRamp ATS Sample";
 
-    String appID = "e47b5b24-f041-4b9f-9467-4744df409e31"; // Sample App ID only; create your own!
+    // Sample App ID only. Do not use this outside of testing.
+    // Create your own here: https://launch.liveramp.com/
+    String appID = "e47b5b24-f041-4b9f-9467-4744df409e31";
 
 
     String env;
@@ -50,44 +52,51 @@ public class MainActivity extends AppCompatActivity {
         updateSDKVersionDisplay();
         updateSDKInitStatus();
 
-        // Best practice: initialize the SDK before an authentication event has occurred.
+        // Best practice: initialize the SDK as early as possible.
         // initializeLiveRampATS();
     }
 
 
-    // Example on how to init LiveRamp
+    // Example on how to just initialize LiveRamp
     private void initializeLiveRampATS(){
 
-
-        if (notCheckingForCCPA || supportOtherGeos) {
-            LRAtsManager.INSTANCE.setHasConsentForNoLegislation(true);
-        }
-
-        // For the 2nd boolean param, set to "false" for production.
-        // In test mode - the SDK will "simulate" envelopes.
-        // Note: No network calls will actually be made in test mode
-        LRAtsConfiguration config = new LRAtsConfiguration(appID, false, false, null);
-
-        LRAtsManager.INSTANCE.initialize(config, new LRCompletionHandlerCallback() {
+        // You can initialize this on a background thread!
+        Runnable runnable = new Runnable() {
             @Override
-            public void invoke(boolean success, @Nullable LRError lrError) {
-                if (success) {
-                    Log.i(LOGTAG, "LiveRamp ATS SDK is initialized and ready for use!");
-                    updateSDKInitStatus();
-                    clearErrorMessage();
-                } else {
-                    // TODO: SDK failed to initialize - handle this error.
-                    Log.e(LOGTAG, "SDK failed to initialize.");
-                    logErrorMessage(lrError.getMessage());
+            public void run() {
+
+                if (notCheckingForCCPA || supportOtherGeos) {
+                    LRAtsManager.INSTANCE.setHasConsentForNoLegislation(true);
                 }
+
+                // For the 2nd boolean param, set to "false" for production.
+                // In test mode - the SDK will "simulate" envelopes.
+                // Note: No network calls will actually be made in test mode
+                LRAtsConfiguration config = new LRAtsConfiguration(appID, false, false, null);
+
+                LRAtsManager.INSTANCE.initialize(config, new LRCompletionHandlerCallback() {
+                    @Override
+                    public void invoke(boolean success, @Nullable LRError lrError) {
+                        if (success) {
+                            Log.i(LOGTAG, "LiveRamp ATS SDK is initialized and ready for use!");
+                            updateSDKInitStatus();
+                            clearErrorMessage();
+                        } else {
+                            // TODO: SDK failed to initialize - handle this error.
+                            Log.e(LOGTAG, "SDK failed to initialize.");
+                            logErrorMessage(lrError.getMessage());
+                        }
+                    }
+                });
             }
-        });
+        };
+
+        AsyncTask.execute(runnable);
     }
 
 
     // Example of Envelope fetch with email
     private void retrieveEnvelopeForInput(String email) {
-//        LRAtsManager.INSTANCE.getEnvelope();
         LRAtsManager.INSTANCE.getEnvelope(new LREmailIdentifier(email), new LREnvelopeCallback() {
             @Override
             public void invoke(@Nullable Envelope envelope, @Nullable LRError lrError) {
@@ -114,23 +123,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // EXAMPLE ONLY: Utility function to set SharedPreferences
-    // Your CMP SDK should be taking care of this - the LiveRamp SDK only reads these values.
-    private void setSharedPreferencesKeyForKeyValue(String key, String value) {
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putString(key, value);
-        editor.apply();
-    }
 
-
-    private void updateSDKVersionDisplay(){
-        sdkVersionRef.setText(LRAtsManager.INSTANCE.getSdkVersion());
-    }
-
-
-    private void updateSDKInitStatus(){
-        initStatusRef.setText(LRAtsManager.INSTANCE.getSdkStatus().toString());
-    }
+    // Sample App Utility methods - can mostly disregard everything below this line
+    // ======================================================================
 
 
      // Attach onclick listeners
@@ -158,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         btn_fetchEnvelope.setOnClickListener(v -> {
             String email = emailInputValue.getText().toString();
             if (email.length() == 0) {
-              email = "jason.chiu@liveramp.com";
+              email = "sample.app@liveramp.com";    // For this demo, use a placeholder email if none is provided
             }
             retrieveEnvelopeForInput(email);
         });
@@ -179,22 +174,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*
-        Example that sets the shared preferences for DEMO purposes.
-        Your CMP SDK (LiveRamp also offers one!) will typically set this for you.
-
-        ** WARNING **
-        You have been warned. For the purposes of this sample code, we'll set it for you.
-        Do not use this in production, or feel the wrath of massive fines.
-     */
-
-    String IABTCF_TC_STRING_KEY = "IABTCF_TCString";
-    String IABTCF_VENDOR_CONSENTS_KEY = "IABTCF_VendorConsents";
-    String IABTCF_PURPOSE_CONSENTS_KEY = "IABTCF_PurposeConsents";
-    String IAB_CCPA_KEY = "IABUSPrivacy_String";
-
-
+    // EXAMPLE ONLY: Example method that sets the shared preferences for DEMO purposes.
+    // Do not use in production or feel the wrath of massive fines.
+    // Your CMP sets these values for you - do not set them yourself.
     private void setPlaceholderConsentExample() {
+
+        String IABTCF_TC_STRING_KEY = "IABTCF_TCString";
+        String IABTCF_VENDOR_CONSENTS_KEY = "IABTCF_VendorConsents";
+        String IABTCF_PURPOSE_CONSENTS_KEY = "IABTCF_PurposeConsents";
+        String IAB_CCPA_KEY = "IABUSPrivacy_String";
+
         setSharedPreferencesKeyForKeyValue(IABTCF_TC_STRING_KEY,
                 "CPKZ42oPKZ5YtADABCENBlCgAP_AAAAAAAAAAwwAQAwgDDABADCAAA");
         setSharedPreferencesKeyForKeyValue(IABTCF_VENDOR_CONSENTS_KEY,
@@ -202,7 +191,16 @@ public class MainActivity extends AppCompatActivity {
         setSharedPreferencesKeyForKeyValue(IABTCF_PURPOSE_CONSENTS_KEY,
                 "1111111111");
         setSharedPreferencesKeyForKeyValue(IAB_CCPA_KEY,
-                "1YNN");
+                "1YNY");
+    }
+
+
+    // EXAMPLE ONLY: Utility function to set SharedPreferences
+    // Your CMP SDK should be taking care of this - the LiveRamp SDK reads these values.
+    private void setSharedPreferencesKeyForKeyValue(String key, String value) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putString(key, value);
+        editor.apply();
     }
 
 
@@ -218,5 +216,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void updateSDKVersionDisplay(){
+        sdkVersionRef.setText(LRAtsManager.INSTANCE.getSdkVersion());
+    }
+
+
+    private void updateSDKInitStatus(){
+        initStatusRef.setText(LRAtsManager.INSTANCE.getSdkStatus().toString());
+    }
 
 }
