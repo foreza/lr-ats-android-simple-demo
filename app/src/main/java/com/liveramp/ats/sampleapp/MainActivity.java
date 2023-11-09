@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 // In test mode - the SDK will "simulate" envelopes.
                 // Note: No network calls will actually be made in test mode
                 // The last param can be set to null.
+
                 LRAtsConfiguration config = new LRAtsConfiguration(appID, false, false, null);
 
                 LRAtsManager.INSTANCE.initialize(config, new LRCompletionHandlerCallback() {
@@ -246,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
     private void updateSDKInitStatus(){
         initStatusRef.setText(LRAtsManager.INSTANCE.getSdkStatus().toString());
     }
-
 
     private String formatStringForDisplay(String originalString) {
         if (originalString.length() > 100) {
