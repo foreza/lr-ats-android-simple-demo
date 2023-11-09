@@ -26,12 +26,13 @@ public class MainActivity extends AppCompatActivity {
 
     String LOGTAG = "LiveRamp ATS Sample";
 
-    // Sample App ID only. Do not use this outside of testing.
-    // Create your own here: https://launch.liveramp.com/
+    // TODO: Replace the init appID with your own app ID
+    // DO NOT use this in production - it will cause you monetization issues.
     String appID = "e47b5b24-f041-4b9f-9467-4744df409e31";
 
 
-    String env;
+    String lr_envelope;
+    String pairIds;
 
     Boolean notCheckingForCCPA = true;
     Boolean supportOtherGeos = true;
@@ -72,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
                 // For the 2nd boolean param, set to "false" for production.
                 // In test mode - the SDK will "simulate" envelopes.
                 // Note: No network calls will actually be made in test mode
+                // The last param can be set to null.
+
                 LRAtsConfiguration config = new LRAtsConfiguration(appID, false, false, null);
 
                 LRAtsManager.INSTANCE.initialize(config, new LRCompletionHandlerCallback() {
@@ -107,12 +110,32 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     envelopeDisplayRef.setText("");
+                    String displayText = "";
 
                     if (envelope.getEnvelope() != null) {
+                        lr_envelope = envelope.getEnvelope();
+
+                        // TODO: Now, provide the lr_envelope value to your partner(s).
+                        // This value expires - by calling `getEnvelope`, you will ensure this value remains relevant.
+                        // Do NOT cache this value. It will not be valuable or useful!
+                        // You should always be using the most up to date envelope with downstream partners.
+                        // More documentation here: https://developers.liveramp.com/authenticatedtraffic-api/docs/configure-programmatic-ad-solution
+                         PartnerIdentity.getInstance().setLREnvelopeForPartnerSDKs(lr_envelope);
+
+                        displayText += "lr_envelope: " + formatStringForDisplay(lr_envelope);
                         clearErrorMessage();
-                        env = envelope.getEnvelope();
-                        envelopeDisplayRef.setText(env);
+
                     }
+
+                    // Example for PairIDs
+                    if (envelope.getEnvelope25() != null) {
+                        pairIds = envelope.getEnvelope25();
+
+                        // self.setPairIDsForPartnerSDKs(envelope: pair_envelope)
+                        displayText += "pairIds: " + formatStringForDisplay(pairIds) + "\n";
+                    }
+
+                    envelopeDisplayRef.setText(displayText);
 
                 } catch (Exception e) {
                     Log.e(LOGTAG, "An error occurred with envelope fetch:" + e.getLocalizedMessage());
@@ -223,6 +246,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateSDKInitStatus(){
         initStatusRef.setText(LRAtsManager.INSTANCE.getSdkStatus().toString());
+    }
+
+    private String formatStringForDisplay(String originalString) {
+        if (originalString.length() > 100) {
+            return originalString.substring(0,100) + "... +"
+                    + (originalString.length()-100) + "\n";
+        } else {
+            return originalString;
+        }
     }
 
 }
