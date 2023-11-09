@@ -7,6 +7,7 @@ import androidx.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,8 @@ import com.liveramp.ats.model.Envelope;
 import com.liveramp.ats.model.LRAtsConfiguration;
 import com.liveramp.ats.model.LREmailIdentifier;
 
+import java.nio.charset.StandardCharsets;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     String lr_envelope;
-    String pairIds;
+    String [] pairIds;
 
     Boolean notCheckingForCCPA = true;
     Boolean supportOtherGeos = true;
@@ -129,10 +132,17 @@ public class MainActivity extends AppCompatActivity {
 
                     // Example for PairIDs
                     if (envelope.getEnvelope25() != null) {
-                        pairIds = envelope.getEnvelope25();
+                        String pairIdb64String = envelope.getEnvelope25();
 
-                        // self.setPairIDsForPartnerSDKs(envelope: pair_envelope)
-                        displayText += "pairIds: " + formatStringForDisplay(pairIds) + "\n";
+                        // PairIDs come as a base64 encoded string.
+                        String base64EncodedString = pairIdb64String;
+                        byte[] decodedBytes = Base64.decode(base64EncodedString, Base64.DEFAULT);
+                        String decodedString = new String(decodedBytes, 0, decodedBytes.length, StandardCharsets.UTF_8);
+                        String[] pairIds = decodedString.split(",");
+
+                        PairIdentity.getInstance().setPairIDForPartnerSDKs(pairIds);
+
+                        displayText += "pairIds: " + formatStringForDisplay(decodedString) + "\n";
                     }
 
                     envelopeDisplayRef.setText(displayText);
