@@ -17,9 +17,7 @@ import com.liveramp.ats.LRAtsManager;
 import com.liveramp.ats.LRError;
 import com.liveramp.ats.callbacks.LRCompletionHandlerCallback;
 import com.liveramp.ats.callbacks.LREnvelopeCallback;
-import com.liveramp.ats.model.Envelope;
-import com.liveramp.ats.model.LRAtsConfiguration;
-import com.liveramp.ats.model.LREmailIdentifier;
+import com.liveramp.ats.model.*;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -53,13 +51,40 @@ public class MainActivity extends AppCompatActivity {
         updateSDKVersionDisplay();
         updateSDKInitStatus();
 
-        // Best practice: initialize the SDK as early as possible.
-        // initializeLiveRampATS();
+        // Best practice: initialize the ATS SDK as early as possible.
+        // When to do this: If you are leveraging ATS for non-google partners
+        initializeLiveRampATS();
+
+        // Best practice: configure the adapter before GMA SDK is initialized!
+        // When to do this: If you are using Google GMA
+        // Note: You do not have to set the email here; set it when you do have it
+        AdManagerGMA.getInstance().configureLiveRampGMASignalProvider(appID);
+
+        // Example: Typically, you also init GMA and Prebid SDK as early as possible
+        AdManagerGMA.getInstance().initGMA(this);
+        AdManagerPrebid.getInstance().initPrebid(this);
     }
 
 
+    // Simulate the case where we just got an email
+    // I want to set this in GMA as well as Prebid.
+    private void simulateObtainedAuthentication(String email) {
+
+        // Set this email within GMA SDK adapter
+        AdManagerGMA.getInstance().setEmailForLiveRampGMASignalProvider(email);
+
+        // Also kick off a call for the envelope
+        retrieveEnvelopeForInput(email);
+    }
+
     // Example on how to just initialize LiveRamp
     private void initializeLiveRampATS(){
+
+        // Check to make sure LiveRamp is not already initializing
+        if (LRAtsManager.INSTANCE.getSdkStatus() != SdkStatus.NOT_INITIALIZED) {
+            Log.e(LOGTAG, "Detected that the ATS SDK is initialized, or in the process of initializing");
+            return;
+        }
 
         // You can initialize this on a background thread!
         Runnable runnable = new Runnable() {
@@ -120,14 +145,14 @@ public class MainActivity extends AppCompatActivity {
                         // Do NOT cache this value. It will not be valuable or useful!
                         // You should always be using the most up to date envelope with downstream partners.
                         // More documentation here: https://developers.liveramp.com/authenticatedtraffic-api/docs/configure-programmatic-ad-solution
-                         PartnerIdentity.getInstance().setLREnvelopeForPartnerSDKs(lr_envelope);
+                        AdManagerPrebid.getInstance().setRampIDEnvelopeForPrebid(lr_envelope);
 
                         displayText += "lr_envelope: " + formatStringForDisplay(lr_envelope);
                         clearErrorMessage();
 
                     }
 
-                    // Example for PairIDs
+                    // Example for PairIDs - ignore if you do not have this integration
                     if (envelope.getEnvelope25() != null) {
                         pairIds = envelope.getEnvelope25();
 
@@ -165,6 +190,10 @@ public class MainActivity extends AppCompatActivity {
         Button btn_resetSDK = (Button) findViewById(R.id.btn_resetSDK);
         Button btn_clearAll = (Button) findViewById(R.id.btn_clearAll);
 
+        Button btn_adReqGMA = (Button) findViewById(R.id.btn_sampleGMAReq);
+        Button btn_adReqPrebid = (Button) findViewById(R.id.btn_samplePrebidReq);
+
+
 
         // Behavior for init SDK
         btn_initSDK.setOnClickListener(v -> {
@@ -178,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
             if (email.length() == 0) {
               email = "sample.app@liveramp.com";    // For this demo, use a placeholder email if none is provided
             }
-            retrieveEnvelopeForInput(email);
+            simulateObtainedAuthentication(email);
         });
 
         // Behavior to reset SDK
@@ -193,6 +222,17 @@ public class MainActivity extends AppCompatActivity {
             envelopeDisplayRef.setText("");
             clearErrorMessage();
         });
+
+
+        // Kick off Prebid Ad Request
+        btn_adReqPrebid.setOnClickListener(v ->{
+            AdManagerPrebid.getInstance().makePrebidAdRequest(this);
+        });
+
+        btn_adReqGMA.setOnClickListener(v -> {
+            AdManagerGMA.getInstance().makeGMAAdRequest(this);
+        });
+
 
     }
 

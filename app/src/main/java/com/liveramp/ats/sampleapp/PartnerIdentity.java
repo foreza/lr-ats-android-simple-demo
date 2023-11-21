@@ -1,7 +1,7 @@
 package com.liveramp.ats.sampleapp;
 
-//import org.prebid.mobile.ExternalUserId;
-//import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.ExternalUserId;
+import org.prebid.mobile.PrebidMobile;
 //import com.adsbynimbus.NimbusAdManager;
 //import com.inmobi.sdk.InMobiSdk;
 //import com.mobilefuse.sdk.MobileFuseTargetingData;
@@ -10,6 +10,7 @@ package com.liveramp.ats.sampleapp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.TargetingParams;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,11 +20,11 @@ public class PartnerIdentity {
 
     public void setLREnvelopeForPartnerSDKs(String envelope) {
 
-            // setLREnvelopeForPrebid(envelope);
-            setLREnvelopeForInMobi(envelope);
-            setLREnvelopeForPubmaticOW(envelope);
-            setLREnvelopeForNimbus(envelope);
-            setLREnvelopeForMobileFuse(envelope);
+//             setLREnvelopeForPrebid(envelope);
+//            setLREnvelopeForInMobi(envelope);
+//            setLREnvelopeForPubmaticOW(envelope);
+//            setLREnvelopeForNimbus(envelope);
+//            setLREnvelopeForMobileFuse(envelope);
 
         // More partners coming soon!
         // Note: Google Ad Manager is a separate workflow.
@@ -42,6 +43,8 @@ public class PartnerIdentity {
 //        // ... other Ids here..
 //
 //        PrebidMobile.setExternalUserIds(externalUserIdArray);
+
+        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", envelope, null, null));
 
         // TODO: Do a sample Prebid ad request to validate
     }

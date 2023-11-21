@@ -20,7 +20,6 @@
 
     <Button
         android:id="@+id/btn_initSDK"
-        android:textSize="20dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
@@ -28,55 +27,131 @@
         android:layout_marginEnd="15dp"
         android:backgroundTint="@color/lrGreen"
         android:text="@string/initialize_liveRamp_ats_sdk"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_initSDK" />
+
+    <Button
+        android:id="@+id/btn_clearAll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/lrGreen"
+        android:text="@string/clear_all_fields"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_resetSDK" />
+
+    <Button
+        android:id="@+id/btn_sampleGMAReq"
+        android:layout_width="200dp"
+        android:layout_height="63dp"
+        android:layout_marginTop="36dp"
+        android:backgroundTint="@color/purple_200"
+        android:text="@string/sample_gma_req"
+        android:textSize="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_clearAll" />
+
+    <Button
+        android:id="@+id/btn_samplePrebidReq"
+        android:layout_width="200dp"
+        android:layout_height="63dp"
+        android:layout_marginTop="36dp"
+        android:backgroundTint="@color/teal_200"
+        android:text="@string/sample_prebid_req"
+        android:textSize="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_clearAll" />
+
+    <Button
+        android:id="@+id/btn_resetSDK"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="15dp"
+        android:backgroundTint="@color/lrGreen"
+        android:clickable="false"
+        android:text="@string/reset_lr_ats_sdk"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_envelopeValue" />
+
+    <TextView
+        android:id="@+id/tv_envelope"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/envelope"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_fetchEnvelope" />
+
     <Button
         android:id="@+id/btn_fetchEnvelope"
         android:layout_width="0dp"
-        android:textSize="20dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="15dp"
         android:backgroundTint="@color/lrGreen"
         android:text="@string/fetch_rampID_envelope"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_emailInput" />
 
-    <Button
-        android:id="@+id/btn_resetSDK"
-        android:clickable="false"
-        android:textSize="20dp"
+    <TextView
+        android:id="@+id/tv_envelopeValue"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="15dp"
-        android:backgroundTint="@color/lrGreen"
-        android:text="@string/reset_lr_ats_sdk"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/black"
+        android:gravity="center"
+        android:text="@string/placeholder"
+        android:textColor="@color/lrGreen"
+        android:textSize="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_envelopeValue" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_envelope" />
 
-    <Button
-        android:id="@+id/btn_clearAll"
+    <EditText
+        android:id="@+id/editText_emailInput"
         android:layout_width="0dp"
-        android:textSize="20dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:backgroundTint="@color/lrGreen"
-        android:text="@string/clear_all_fields"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/exampleEmail"
+        android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_resetSDK" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_email" />
 
     <TextView
         android:id="@+id/tv_versionValue"
@@ -106,56 +181,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_version" />
-
-    <EditText
-        android:id="@+id/editText_emailInput"
-        android:layout_width="0dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:hint="@string/exampleEmail"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_email"
-        android:autofillHints="" />
-
-    <TextView
-        android:id="@+id/tv_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_initSDK" />
-
-    <TextView
-        android:id="@+id/tv_envelope"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/envelope"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_fetchEnvelope" />
-
-    <TextView
-        android:id="@+id/tv_envelopeValue"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/black"
-        android:gravity="center"
-        android:text="@string/placeholder"
-        android:textColor="@color/lrGreen"
-        android:textSize="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_envelope" />
 
     <TextView
         android:id="@+id/tv_errorRegion"
