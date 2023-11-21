@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
         updateSDKVersionDisplay();
         updateSDKInitStatus();
 
+        // Example only - make sure your CMP is initialized!
+        setPlaceholderConsentExample();
+
         // Best practice: initialize the ATS SDK as early as possible.
         // When to do this: If you are leveraging ATS for non-google partners
         initializeLiveRampATS();
