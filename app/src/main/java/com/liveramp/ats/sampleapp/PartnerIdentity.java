@@ -13,17 +13,18 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 // TODO:
 public class PartnerIdentity {
 
     public void setLREnvelopeForPartnerSDKs(String envelope) {
 
-            // setLREnvelopeForPrebid(envelope);
-            setLREnvelopeForInMobi(envelope);
-            setLREnvelopeForPubmaticOW(envelope);
-            setLREnvelopeForNimbus(envelope);
-            setLREnvelopeForMobileFuse(envelope);
+//            setLREnvelopeForPrebid(envelope);
+//            setLREnvelopeForInMobi(envelope);
+//            setLREnvelopeForPubmaticOW(envelope);
+//            setLREnvelopeForNimbus(envelope);
+//            setLREnvelopeForMobileFuse(envelope);
 
         // More partners coming soon!
         // Note: Google Ad Manager is a separate workflow.
@@ -51,7 +52,10 @@ public class PartnerIdentity {
     // https://developers.liveramp.com/authenticatedtraffic-api/docs/configure-programmatic-ad-solution#inmobi
     // https://support.inmobi.com/monetize/data-identity/unifid/unifid-sdk-contract-specifications#unifid-api-specification
     // This ensures all subsequent ad requests to InMobi's exchange contain the RampID envelope.
-    public void setLREnvelopeForInMobi(String envelope) {
+    public void setLREnvelopeForInMobi(String envelope) throws JSONException {
+
+//        JSONObject unifiedIds = new JSONObject().put("liveramp.com", "envelope");
+//        InMobiSdk.setPublisherProvidedUnifiedId(unifiedIds);
 
 //        JSONObject unifiedIds = new JSONObject();
 //
@@ -88,6 +92,8 @@ public class PartnerIdentity {
 //        extMap.put("rtiPartner", "idl");
 //
 //        NimbusAdManager.addExtendedId("liveramp.com", envelope, extMap);
+//        NimbusAdManager.addExtendedId("google.com", pairID, extMap);
+
         // TODO: Do a sample Nimbus ad request to validate
     }
 
