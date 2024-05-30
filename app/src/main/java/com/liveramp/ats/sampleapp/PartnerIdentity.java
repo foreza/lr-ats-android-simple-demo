@@ -12,11 +12,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // TODO:
 public class PartnerIdentity {
+
+    // For ATS Direct
+    String atsdTargetingKey = "atsd";
+    List<String> atsdTargetingValues;
 
     public void setLREnvelopeForPartnerSDKs(String envelope) {
 
@@ -95,6 +101,21 @@ public class PartnerIdentity {
 //        NimbusAdManager.addExtendedId("google.com", pairID, extMap);
 
         // TODO: Do a sample Nimbus ad request to validate
+    }
+
+
+
+
+    //
+    public void setAtsdTargetingValues(List<String> values) {
+        this.atsdTargetingValues = values;
+    }
+
+
+    public List<String> getATSDirectKeyValues(){
+        //        AdManagerAdRequest newRequest = new AdManagerAdRequest.Builder()
+        //                .addCustomTargeting(atsdTargetingKey, atsdTargetingValues);
+        return this.atsdTargetingValues;
     }
 
 

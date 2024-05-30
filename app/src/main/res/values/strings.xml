@@ -8,7 +8,7 @@
     <string name="clear_all_fields">Clear All Fields</string>
     <string name="v0_0_0">v0.0.0</string>
     <string name="sdk_initialized">SDK Initialized:</string>
-    <string name="exampleEmail">test@liveramp.com</string>
+    <string name="exampleEmail">atstest@liveramp.com</string>
     <string name="email">Email:</string>
     <string name="envelope">Envelope:</string>
     <string name="placeholder">PLACEHOLDER</string>

@@ -2,11 +2,14 @@ package com.liveramp.ats.sampleapp;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
 
 import android.content.SharedPreferences;
+
+
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,9 +20,9 @@ import com.liveramp.ats.LRAtsManager;
 import com.liveramp.ats.LRError;
 import com.liveramp.ats.callbacks.LRCompletionHandlerCallback;
 import com.liveramp.ats.callbacks.LREnvelopeCallback;
-import com.liveramp.ats.model.Envelope;
-import com.liveramp.ats.model.LRAtsConfiguration;
-import com.liveramp.ats.model.LREmailIdentifier;
+import com.liveramp.ats.model.*;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -28,11 +31,13 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: Replace the init appID with your own app ID
     // DO NOT use this in production - it will cause you monetization issues.
-    String appID = "e47b5b24-f041-4b9f-9467-4744df409e31";
+//    String appID = "e47b5b24-f041-4b9f-9467-4744df409e31"; // For everything else
+    String atsd_test_appID = "6aebc913-81ed-43cf-98f1-ddab49423f3d"; // Test ATS Direct
 
 
     String lr_envelope;
-    String pairIds;
+    String pairId;
+    List<String> atsdKeyValues;
 
     Boolean notCheckingForCCPA = true;
     Boolean supportOtherGeos = true;
@@ -75,7 +80,10 @@ public class MainActivity extends AppCompatActivity {
                 // Note: No network calls will actually be made in test mode
                 // The last param can be set to null.
 
-                LRAtsConfiguration config = new LRAtsConfiguration(appID, false, false, null);
+                // Deprecated!
+                // LRAtsConfiguration config = new LRAtsConfiguration(appID, false, false, null);
+                // Example: (Only provide app ID. by default, api key is null, test mode = false, and log to file is false.
+                LRAtsConfiguration config = new LRAtsConfiguration(atsd_test_appID);
 
                 LRAtsManager.INSTANCE.initialize(config, new LRCompletionHandlerCallback() {
                     @Override
@@ -100,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Example of Envelope fetch with email
     private void retrieveEnvelopeForInput(String email) {
+
+
         LRAtsManager.INSTANCE.getEnvelope(new LREmailIdentifier(email), new LREnvelopeCallback() {
             @Override
             public void invoke(@Nullable Envelope envelope, @Nullable LRError lrError) {
@@ -122,17 +132,28 @@ public class MainActivity extends AppCompatActivity {
                         // More documentation here: https://developers.liveramp.com/authenticatedtraffic-api/docs/configure-programmatic-ad-solution
                          PartnerIdentity.getInstance().setLREnvelopeForPartnerSDKs(lr_envelope);
 
-                        displayText += "lr_envelope: " + formatStringForDisplay(lr_envelope);
+                        displayText += "lr_envelope: " + formatStringForDisplay(lr_envelope)+ "\n";;
                         clearErrorMessage();
 
                     }
 
-                    // Example for PairIDs
+                    // Example for PairIDs. getEnvelope25 gets a base64 encoded string.
+                    // Use helper method getPairSegments() to get an array of segments
                     if (envelope.getEnvelope25() != null) {
-                        pairIds = envelope.getEnvelope25();
+//                        pairIds = envelope.getEnvelope25();
+                        pairId = envelope.getPairSegments().get(0);        // We'll always return 1 PairID
 
                         // self.setPairIDsForPartnerSDKs(envelope: pair_envelope)
-                        displayText += "pairIds: " + formatStringForDisplay(pairIds) + "\n";
+                        displayText += "pairId: " + formatStringForDisplay(pairId) + "\n";
+                    }
+
+                    // Example for ATS Direct. getEnvelope26 gets a base64 encoded string.
+                    // Use helper method getAtsDirectSegments() to get an array of key values
+                    if (envelope.getEnvelope26() != null) {
+                        atsdKeyValues = envelope.getAtsDirectSegments();
+
+                        PartnerIdentity.getInstance().setAtsdTargetingValues(atsdKeyValues);
+                        displayText += "atsd targeting values: " + formatStringForDisplay(atsdKeyValues.toString()) + "\n";
                     }
 
                     envelopeDisplayRef.setText(displayText);
@@ -176,9 +197,10 @@ public class MainActivity extends AppCompatActivity {
         btn_fetchEnvelope.setOnClickListener(v -> {
             String email = emailInputValue.getText().toString();
             if (email.length() == 0) {
-              email = "sample.app@liveramp.com";    // For this demo, use a placeholder email if none is provided
+              email = "atstest@liveramp.com";    // For this demo, use a placeholder email if none is provided
             }
             retrieveEnvelopeForInput(email);
+
         });
 
         // Behavior to reset SDK
@@ -221,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
     // EXAMPLE ONLY: Utility function to set SharedPreferences
     // Your CMP SDK should be taking care of this - the LiveRamp SDK reads these values.
     private void setSharedPreferencesKeyForKeyValue(String key, String value) {
+
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
         editor.putString(key, value);
         editor.apply();

@@ -11,7 +11,7 @@
         android:id="@+id/tv_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="32dp"
         android:text="@string/lr_ats_sdk_version"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,14 +20,14 @@
 
     <Button
         android:id="@+id/btn_initSDK"
-        android:textSize="20dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="15dp"
         android:backgroundTint="@color/lrGreen"
         android:text="@string/initialize_liveRamp_ats_sdk"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -35,13 +35,13 @@
     <Button
         android:id="@+id/btn_fetchEnvelope"
         android:layout_width="0dp"
-        android:textSize="20dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="15dp"
         android:backgroundTint="@color/lrGreen"
         android:text="@string/fetch_rampID_envelope"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,15 +49,15 @@
 
     <Button
         android:id="@+id/btn_resetSDK"
-        android:clickable="false"
-        android:textSize="20dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="15dp"
         android:backgroundTint="@color/lrGreen"
+        android:clickable="false"
         android:text="@string/reset_lr_ats_sdk"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,13 +66,13 @@
     <Button
         android:id="@+id/btn_clearAll"
         android:layout_width="0dp"
-        android:textSize="20dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="8dp"
         android:backgroundTint="@color/lrGreen"
         android:text="@string/clear_all_fields"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:text="@string/v0_0_0"
         app:layout_constraintStart_toEndOf="@+id/tv_version"
         app:layout_constraintTop_toTopOf="parent" />
@@ -109,45 +109,32 @@
 
     <EditText
         android:id="@+id/editText_emailInput"
-        android:layout_width="0dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:hint="@string/exampleEmail"
+        android:layout_width="307dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="4dp"
+        android:autofillHints=""
         android:ems="10"
+        android:hint="@string/exampleEmail"
         android:inputType="textEmailAddress"
+        android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_email"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_initSDK" />
 
     <TextView
         android:id="@+id/tv_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:text="@string/email"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/editText_emailInput"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_initSDK" />
-
-    <TextView
-        android:id="@+id/tv_envelope"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/envelope"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_fetchEnvelope" />
 
     <TextView
         android:id="@+id/tv_envelopeValue"
         android:layout_width="0dp"
         android:layout_height="100dp"
-        android:layout_marginTop="16dp"
         android:background="@color/black"
         android:gravity="center"
         android:text="@string/placeholder"
@@ -155,7 +142,7 @@
         android:textSize="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_envelope" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_fetchEnvelope" />
 
     <TextView
         android:id="@+id/tv_errorRegion"
