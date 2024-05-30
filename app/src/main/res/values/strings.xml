@@ -6,6 +6,7 @@
     <string name="reset_lr_ats_sdk">Reset LR ATS SDK</string>
     <string name="not_initialized">Not Initialized</string>
     <string name="clear_all_fields">Clear All Fields</string>
+    <string name="request_banner">Request Banner</string>
     <string name="v0_0_0">v0.0.0</string>
     <string name="sdk_initialized">SDK Initialized:</string>
     <string name="exampleEmail">atstest@liveramp.com</string>

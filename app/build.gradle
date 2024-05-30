@@ -46,4 +46,5 @@ dependencies {
     //    implementation('com.pubmatic.sdk:openwrap:3.3.0')
     //    implementation "com.adsbynimbus.android:nimbus:2.+"
     //    implementation 'com.mobilefuse.sdk:mobilefuse-sdk-core:1.6.5'
+    implementation 'com.google.android.gms:play-services-ads:23.1.0'
 }

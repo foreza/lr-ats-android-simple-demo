@@ -115,6 +115,9 @@ public class PartnerIdentity {
     public List<String> getATSDirectKeyValues(){
         //        AdManagerAdRequest newRequest = new AdManagerAdRequest.Builder()
         //                .addCustomTargeting(atsdTargetingKey, atsdTargetingValues);
+        if (atsdTargetingValues == null) {
+            return new ArrayList<>();
+        }
         return this.atsdTargetingValues;
     }
 

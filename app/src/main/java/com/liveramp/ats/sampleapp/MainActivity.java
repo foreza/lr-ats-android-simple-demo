@@ -14,8 +14,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerAdView;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.liveramp.ats.LRAtsManager;
 import com.liveramp.ats.LRError;
 import com.liveramp.ats.callbacks.LRCompletionHandlerCallback;
@@ -60,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Best practice: initialize the SDK as early as possible.
         // initializeLiveRampATS();
+
+        // For ATS Direct (beta), we support primarily the GMA SDK.
+        initGMA();
     }
 
 
@@ -167,6 +177,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void initGMA() {
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                envelopeDisplayRef.setText("GMA SDK initialized");
+            }
+        });
+
+    }
+
+    private void requestAndShowBanner() {
+        // Create a new ad view.
+        AdManagerAdView adView = new AdManagerAdView(this);
+        adView.setAdSizes(AdSize.MEDIUM_RECTANGLE);
+        adView.setAdUnitId("/22794602900/ats-direct-v2-demo");
+
+        // Replace ad container with new ad view.
+        LinearLayout adContainerView = (LinearLayout) findViewById(R.id.banner_container);
+        adContainerView.removeAllViews();
+        adContainerView.addView(adView);
+
+        // Start loading the ad in the background.
+        AdManagerAdRequest adRequest = new AdManagerAdRequest.Builder()
+                .addCustomTargeting( // Try to fetch targeting when we make the ad request
+                        PartnerIdentity.getInstance().atsdTargetingKey,
+                        PartnerIdentity.getInstance().getATSDirectKeyValues())
+                .build();
+
+        adView.loadAd(adRequest);
+    }
+
+
+
 
     // Sample App Utility methods - can mostly disregard everything below this line
     // ======================================================================
@@ -185,6 +229,8 @@ public class MainActivity extends AppCompatActivity {
         Button btn_fetchEnvelope = (Button) findViewById(R.id.btn_fetchEnvelope);
         Button btn_resetSDK = (Button) findViewById(R.id.btn_resetSDK);
         Button btn_clearAll = (Button) findViewById(R.id.btn_clearAll);
+        Button btn_requestAd = (Button) findViewById(R.id.btn_showBanner);
+
 
 
         // Behavior for init SDK
@@ -205,8 +251,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Behavior to reset SDK
         btn_resetSDK.setOnClickListener(v -> {
-             LRAtsManager.INSTANCE.resetSdk();
+            LRAtsManager.INSTANCE.resetSdk();       // On logout or session.. we must resetSDK
             updateSDKInitStatus();
+            // Clear out any targeting values as well!
+            PartnerIdentity.getInstance().setAtsdTargetingValues(null);
         });
 
         // Behavior to clear all input
@@ -214,6 +262,10 @@ public class MainActivity extends AppCompatActivity {
             emailInputValue.setText("");
             envelopeDisplayRef.setText("");
             clearErrorMessage();
+        });
+
+        btn_requestAd.setOnClickListener(v -> {
+            requestAndShowBanner();
         });
 
     }
