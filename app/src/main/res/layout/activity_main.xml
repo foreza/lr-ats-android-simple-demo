@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <com.linecorp.linesdk.widget.LoginButton
+        android:id="@+id/line_login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/btn_clearAll" />
+
 
     <TextView
         android:id="@+id/tv_version"

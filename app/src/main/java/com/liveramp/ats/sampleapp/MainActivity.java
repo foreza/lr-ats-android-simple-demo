@@ -1,9 +1,13 @@
 package com.liveramp.ats.sampleapp;
 
+import static java.security.AccessController.getContext;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
+//import androidx.preference.PreferenceManager;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,7 +16,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.linecorp.linesdk.LoginDelegate;
+import com.linecorp.linesdk.LoginListener;
+import com.linecorp.linesdk.Scope;
+import com.linecorp.linesdk.auth.LineAuthenticationParams;
+import com.linecorp.linesdk.auth.LineLoginApi;
+import com.linecorp.linesdk.auth.LineLoginResult;
+import com.linecorp.linesdk.widget.LoginButton;
 import com.liveramp.ats.LRAtsManager;
 import com.liveramp.ats.LRError;
 import com.liveramp.ats.callbacks.LRCompletionHandlerCallback;
@@ -20,6 +32,8 @@ import com.liveramp.ats.callbacks.LREnvelopeCallback;
 import com.liveramp.ats.model.Envelope;
 import com.liveramp.ats.model.LRAtsConfiguration;
 import com.liveramp.ats.model.LREmailIdentifier;
+
+import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -52,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
         clearErrorMessage();
         updateSDKVersionDisplay();
         updateSDKInitStatus();
+
+
+        // POC:
+        setupLineLoginPOC();
 
         // Best practice: initialize the SDK as early as possible.
         // initializeLiveRampATS();
@@ -221,9 +239,10 @@ public class MainActivity extends AppCompatActivity {
     // EXAMPLE ONLY: Utility function to set SharedPreferences
     // Your CMP SDK should be taking care of this - the LiveRamp SDK reads these values.
     private void setSharedPreferencesKeyForKeyValue(String key, String value) {
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putString(key, value);
-        editor.apply();
+        // No-op for now
+//        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+//        editor.putString(key, value);
+//        editor.apply();
     }
 
 
@@ -254,6 +273,114 @@ public class MainActivity extends AppCompatActivity {
                     + (originalString.length()-100) + "\n";
         } else {
             return originalString;
+        }
+    }
+
+
+    LoginDelegate loginDelegate = LoginDelegate.Factory.create();
+
+    private void setupLineLoginPOC() {
+        // A delegate for delegating the login result to the internal login handler.
+
+        LoginButton loginButton = findViewById(R.id.line_login_btn);
+
+        loginButton.setChannelId("2005666791");
+
+        // configure whether login process should be done by Line App, or inside WebView.
+        loginButton.enableLineAppAuthentication(false);
+
+// set up required scopes and nonce.
+//        loginButton.setAuthenticationParams(new LineAuthenticationParams.Builder()
+//                .scopes(Arrays.asList(Scope.PROFILE, Scope.OC_EMAIL, Scope.OC_REAL_NAME, Scope.OPENID_CONNECT))
+//                // .nonce("<a randomly-generated string>") // nonce can be used to improve security
+//                .build()
+//        );
+        loginButton.setLoginDelegate(loginDelegate);
+        loginButton.addLoginListener(new LoginListener() {
+            @Override
+            public void onLoginSuccess(@NonNull LineLoginResult result) {
+//                Toast.makeText(getContext(), "Login success", Toast.LENGTH_SHORT).show();
+                Log.d(LOGTAG, "Login success:" + result.getLineIdToken());
+
+                String accessToken = result.getLineCredential().getAccessToken().getTokenString();
+                String email = result.getLineIdToken().getEmail();
+
+
+                Log.d(LOGTAG, "Email for ATS?:" + email);
+
+            }
+
+            @Override
+            public void onLoginFailure(@Nullable LineLoginResult result) {
+//                Toast.makeText(getContext(), "Login failure", Toast.LENGTH_SHORT).show();
+                Log.e(LOGTAG, "An error occurred with line login:" + result.getErrorData());
+
+            }
+        });
+
+        loginButton.setLoginDelegate(loginDelegate);
+
+
+        // trigger this onclick
+        loginButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View view) {
+                // App-to-app login
+                try{
+                    Intent loginIntent = LineLoginApi.getLoginIntentWithoutLineAppAuth(
+                            view.getContext(),
+                            "2005666791",
+                            new LineAuthenticationParams.Builder()
+                                    .scopes(Arrays.asList(Scope.PROFILE, Scope.OC_EMAIL, Scope.OC_REAL_NAME, Scope.OPENID_CONNECT))
+                                    // .nonce("<a randomly-generated string>") // nonce can be used to improve security
+                                    .build());
+                    startActivityForResult(loginIntent, 1);
+
+                }
+                catch(Exception e) {
+                    Log.e("ERROR", e.toString());
+                }
+            }
+        });
+
+
+
+
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != 1) {
+            Log.e("ERROR", "Unsupported Request");
+            return;
+        }
+
+        LineLoginResult result = LineLoginApi.getLoginResultFromIntent(data);
+
+        switch (result.getResponseCode()) {
+
+            case SUCCESS:
+                // Login successful
+                String accessToken = result.getLineCredential().getAccessToken().getTokenString();
+
+                Intent transitionIntent = new Intent(this, MainActivity.class);
+                String line_email = result.getLineIdToken().getEmail();
+                Log.d(LOGTAG, "EMAIL FROM LINE:" + line_email);
+
+                transitionIntent.putExtra("line_profile", result.getLineProfile());
+                transitionIntent.putExtra("line_credential", result.getLineCredential());
+                startActivity(transitionIntent);
+                break;
+
+            case CANCEL:
+                // Login canceled by user
+                Log.e("ERROR", "LINE Login Canceled by user.");
+                break;
+
+            default:
+                // Login canceled due to other error
+                Log.e("ERROR", "Login FAILED!");
+                Log.e("ERROR", result.getErrorData().toString());
         }
     }
 
