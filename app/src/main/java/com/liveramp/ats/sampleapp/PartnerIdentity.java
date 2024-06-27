@@ -10,6 +10,7 @@ package com.liveramp.ats.sampleapp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.ExternalUserId;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,8 +39,10 @@ public class PartnerIdentity {
     // This ensures all subsequent ad requests to Prebid Server contain the RampID envelope.
     public void setLREnvelopeForPrebid(String envelope) {
 
-//        ArrayList<ExternalUserId> externalUserIdArray = new ArrayList<>();
-//        externalUserIdArray.add(new ExternalUserId("liveramp.com", envelope, null, null));
+        ArrayList<ExternalUserId> externalUserIdArray = new ArrayList<>();
+        externalUserIdArray.add(new ExternalUserId("liveramp.com", envelope, null, null));
+        externalUserIdArray.add(new ExternalUserId("google.com", envelope, 571187, null));
+
 //        // ... other Ids here..
 //
 //        PrebidMobile.setExternalUserIds(externalUserIdArray);

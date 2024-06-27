@@ -5,6 +5,7 @@ import static java.security.AccessController.getContext;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 //import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
 
                 if (notCheckingForCCPA || supportOtherGeos) {
-                    LRAtsManager.INSTANCE.setHasConsentForNoLegislation(true);
+                    // LRAtsManager.INSTANCE.setHasConsentForNoLegislation(true);
                 }
 
                 // For the 2nd boolean param, set to "false" for production.
@@ -148,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     // Example for PairIDs
                     if (envelope.getEnvelope25() != null) {
                         pairIds = envelope.getEnvelope25();
+//                        pairIds = envelope.getPairSegments()
 
                         // self.setPairIDsForPartnerSDKs(envelope: pair_envelope)
                         displayText += "pairIds: " + formatStringForDisplay(pairIds) + "\n";
@@ -232,7 +234,10 @@ public class MainActivity extends AppCompatActivity {
         setSharedPreferencesKeyForKeyValue(IABTCF_PURPOSE_CONSENTS_KEY,
                 "1111111111");
         setSharedPreferencesKeyForKeyValue(IAB_CCPA_KEY,
-                "1YNY");
+                 "1-N-"); // Does not init, "invalid"
+                // "1YYY"); // Does not init, "invalid"
+                // "1---"); // Does not init, "invalid"
+                // "1YNY");
     }
 
 
@@ -240,9 +245,9 @@ public class MainActivity extends AppCompatActivity {
     // Your CMP SDK should be taking care of this - the LiveRamp SDK reads these values.
     private void setSharedPreferencesKeyForKeyValue(String key, String value) {
         // No-op for now
-//        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-//        editor.putString(key, value);
-//        editor.apply();
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putString(key, value);
+        editor.apply();
     }
 
 

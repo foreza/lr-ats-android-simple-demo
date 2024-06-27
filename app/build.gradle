@@ -31,6 +31,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
 
+    implementation 'androidx.preference:preference:1.2.0'
+
     // Required: The LiveRamp ATS SDK
     // If you wish to lock to a specific version - check for the versions at
     // https://developers.liveramp.com/authenticatedtraffic-api/changelog
@@ -44,7 +46,7 @@ dependencies {
 
     // Partner SDKs, as an example:
 
-    //    implementation 'org.prebid:prebid-mobile-sdk:2.0.4'
+        implementation 'org.prebid:prebid-mobile-sdk:2.0.4'
     //    implementation 'com.inmobi.monetization:inmobi-ads:10.1.3'
     //    implementation('com.pubmatic.sdk:openwrap:3.3.0')
     //    implementation "com.adsbynimbus.android:nimbus:2.+"
