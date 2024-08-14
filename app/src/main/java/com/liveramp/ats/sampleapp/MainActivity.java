@@ -7,7 +7,6 @@ import androidx.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,21 +20,20 @@ import com.liveramp.ats.callbacks.LREnvelopeCallback;
 import com.liveramp.ats.model.Envelope;
 import com.liveramp.ats.model.LRAtsConfiguration;
 import com.liveramp.ats.model.LREmailIdentifier;
+import com.liveramp.ats.sampleapp.providers.*;
 
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    String LOGTAG = "LiveRamp ATS Sample";
+    String LOGTAG = "LiveRamp_ATS_Sample";
 
     // TODO: Replace the init appID with your own app ID
     // DO NOT use this in production - it will cause you monetization issues.
     String appID = "e47b5b24-f041-4b9f-9467-4744df409e31";
 
-
     String lr_envelope;
-    String [] pairIds;
 
     Boolean notCheckingForCCPA = true;
     Boolean supportOtherGeos = true;
@@ -58,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Best practice: initialize the SDK as early as possible.
         // initializeLiveRampATS();
+
+        // Play with me! Or Comment me out.
+         initAdRequestProviders();
     }
 
 
@@ -73,12 +74,8 @@ public class MainActivity extends AppCompatActivity {
                     LRAtsManager.INSTANCE.setHasConsentForNoLegislation(true);
                 }
 
-                // For the 2nd boolean param, set to "false" for production.
-                // In test mode - the SDK will "simulate" envelopes.
-                // Note: No network calls will actually be made in test mode
-                // The last param can be set to null.
-
-                LRAtsConfiguration config = new LRAtsConfiguration(appID, false, false, null);
+                // An API key is not required for standard ATS - leave as empty string
+                LRAtsConfiguration config = new LRAtsConfiguration(appID, "");
 
                 LRAtsManager.INSTANCE.initialize(config, new LRCompletionHandlerCallback() {
                     @Override
@@ -132,17 +129,11 @@ public class MainActivity extends AppCompatActivity {
 
                     // Example for PairIDs
                     if (envelope.getEnvelope25() != null) {
-                        String pairIdb64String = envelope.getEnvelope25();
 
-                        // PairIDs come as a base64 encoded string.
-                        String base64EncodedString = pairIdb64String;
-                        byte[] decodedBytes = Base64.decode(base64EncodedString, Base64.DEFAULT);
-                        String decodedString = new String(decodedBytes, 0, decodedBytes.length, StandardCharsets.UTF_8);
-                        String[] pairIds = decodedString.split(",");
-
+                        List<String> pairIds = envelope.getPairSegments();
                         PairIdentity.getInstance().setPairIDForPartnerSDKs(pairIds);
 
-                        displayText += "pairIds: " + formatStringForDisplay(decodedString) + "\n";
+                        displayText += "pairIds: " + formatStringForDisplay(pairIds.toString()) + "\n";
                     }
 
                     envelopeDisplayRef.setText(displayText);
@@ -151,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(LOGTAG, "An error occurred with envelope fetch:" + e.getLocalizedMessage());
                     logErrorMessage(e.getLocalizedMessage());
                 }
+
+                // Play with me! Or comment me out.
+                testAdRequestProviders();
             }
         });
     }
@@ -159,6 +153,23 @@ public class MainActivity extends AppCompatActivity {
 
     // Sample App Utility methods - can mostly disregard everything below this line
     // ======================================================================
+
+
+    private void initAdRequestProviders(){
+//        PubmaticOWProvider.getInstance().setup(this);
+//        NimbusProvider.getInstance().setup(getApplicationContext(), this);
+//        PrebidProvider.getInstance().setup(getApplicationContext());
+    }
+
+    // Calls each of the below SDKs to make a request for testing purposes.
+    private void testAdRequestProviders(){
+
+        // Test ad requests here
+//        PubmaticOWProvider.getInstance().makeRequest();
+//        NimbusProvider.getInstance().makeRequest();
+//        PrebidProvider.getInstance().makeRequest();
+
+    }
 
 
      // Attach onclick listeners
@@ -186,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         btn_fetchEnvelope.setOnClickListener(v -> {
             String email = emailInputValue.getText().toString();
             if (email.length() == 0) {
-              email = "sample.app@liveramp.com";    // For this demo, use a placeholder email if none is provided
+              email = "jason.chiu@liveramp.com";    // For this demo, use a placeholder email if none is provided
             }
             retrieveEnvelopeForInput(email);
         });

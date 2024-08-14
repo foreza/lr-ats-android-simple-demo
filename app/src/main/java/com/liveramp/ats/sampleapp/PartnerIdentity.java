@@ -8,10 +8,13 @@ package com.liveramp.ats.sampleapp;
 //import com.pubmatic.sdk.common.OpenWrapSDK;
 //import com.pubmatic.sdk.common.models.POBExternalUserId;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.adsbynimbus.NimbusAdManager;
+import com.pubmatic.sdk.common.OpenWrapSDK;
+import com.pubmatic.sdk.common.models.POBExternalUserId;
 
-import java.util.ArrayList;
+import org.prebid.mobile.ExternalUserId;
+import org.prebid.mobile.TargetingParams;
+
 import java.util.HashMap;
 
 // TODO:
@@ -19,11 +22,11 @@ public class PartnerIdentity {
 
     public void setLREnvelopeForPartnerSDKs(String envelope) {
 
-            // setLREnvelopeForPrebid(envelope);
-            setLREnvelopeForInMobi(envelope);
-            setLREnvelopeForPubmaticOW(envelope);
-            setLREnvelopeForNimbus(envelope);
-            setLREnvelopeForMobileFuse(envelope);
+        setLREnvelopeForPrebid(envelope);
+        setLREnvelopeForPubmaticOW(envelope);
+        setLREnvelopeForNimbus(envelope);
+        setLREnvelopeForInMobi(envelope);
+        setLREnvelopeForMobileFuse(envelope);
 
         // More partners coming soon!
         // Note: Google Ad Manager is a separate workflow.
@@ -37,13 +40,13 @@ public class PartnerIdentity {
     // This ensures all subsequent ad requests to Prebid Server contain the RampID envelope.
     public void setLREnvelopeForPrebid(String envelope) {
 
+        // Using official Prebid SDK - storeExternalUserId will presently work
+        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", envelope, null, null));
+
+        // Presently, this will not work
 //        ArrayList<ExternalUserId> externalUserIdArray = new ArrayList<>();
 //        externalUserIdArray.add(new ExternalUserId("liveramp.com", envelope, null, null));
-//        // ... other Ids here..
-//
 //        PrebidMobile.setExternalUserIds(externalUserIdArray);
-
-        // TODO: Do a sample Prebid ad request to validate
     }
 
 
@@ -72,9 +75,8 @@ public class PartnerIdentity {
     // This ensures all subsequent ad requests to Pubmatic OpenWrap contain the RampID envelope.
     public void setLREnvelopeForPubmaticOW(String envelope){
 
-//        POBExternalUserId adServerUserId = new POBExternalUserId("liveramp.com", envelope);
-//        OpenWrapSDK.addExternalUserId(adServerUserId);
-
+        POBExternalUserId identityEnvelope = new POBExternalUserId("liveramp.com", envelope);
+        OpenWrapSDK.addExternalUserId(identityEnvelope);
         // TODO: Do a sample OpenWrap ad request to validate
     }
 
@@ -84,11 +86,10 @@ public class PartnerIdentity {
     // https://docs.adsbynimbus.com/docs/sdk/android/identity-providers/liveramp#setup
     public void setLREnvelopeForNimbus(String envelope){
 
-//        HashMap extMap = new HashMap<String, String>();
-//        extMap.put("rtiPartner", "idl");
-//
-//        NimbusAdManager.addExtendedId("liveramp.com", envelope, extMap);
-        // TODO: Do a sample Nimbus ad request to validate
+        HashMap<String, String> extMap = new HashMap<String, String>();
+        extMap.put("rtiPartner", "idl");
+
+        NimbusAdManager.addExtendedId("liveramp.com", envelope, extMap);
     }
 
 
